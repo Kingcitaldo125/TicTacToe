@@ -5,46 +5,8 @@ import random
 gridCells = []
 done = False
 
-class Square():
-	def __init__(self,x,y,w,h):
-		self.x = x
-		self.y = y
-		self.width = w
-		self.height = h
-		self.color = (255,255,255)
-		self.classification = None
-	
-	def checkBounds(self,mX,mY):
-		if self.classification == None:
-			if mX >= self.x and mX <= self.x+self.width:
-				if mY >= self.y and mY <= self.y+self.height:
-					#self.color = (random.randrange(0,255),random.randrange(0,255),random.randrange(0,255))
-					return True
-		
-		return False
-	
-	def getClassification(self):
-		return self.classification
-		
-	def setClassification(self,classs):
-		if self.classification != None:
-			return None
-			
-		if classs == "X":
-			self.classification = "X"
-			return classs
-		else:
-			self.classification = "O"
-			return classs
-	
-	def draw(self,surface):
-		pygame.draw.rect(surface, self.color, (self.x,self.y,self.width,self.height), 1)
-		if self.classification == "X":
-			pygame.draw.line(surface, (255,255,255), (self.x,self.y), (self.x+self.width, self.y+self.height))
-			pygame.draw.line(surface, (255,255,255), (self.x,self.y+self.height), (self.x+self.width,self.y))
-		elif self.classification == "O":
-			pygame.draw.circle(surface, (255,255,255), (int(self.x+(self.width/2)),int(self.y+(self.height/2))), int(self.height/2), 1)
-
+winX = 800
+winY = 600
 
 def checkNeighbors(cell, cellIdx):
 	global gridCells
@@ -249,6 +211,46 @@ def checkNeighbors(cell, cellIdx):
 	
 	return []
 
+class Square():
+	def __init__(self,x,y,w,h):
+		self.x = x
+		self.y = y
+		self.width = w
+		self.height = h
+		self.color = (255,255,255)
+		self.classification = None
+	
+	def checkBounds(self,mX,mY):
+		if self.classification == None:
+			if mX >= self.x and mX <= self.x+self.width:
+				if mY >= self.y and mY <= self.y+self.height:
+					#self.color = (random.randrange(0,255),random.randrange(0,255),random.randrange(0,255))
+					return True
+		
+		return False
+	
+	def getClassification(self):
+		return self.classification
+		
+	def setClassification(self,classs):
+		if self.classification != None:
+			return None
+			
+		if classs == "X":
+			self.classification = "X"
+			return classs
+		else:
+			self.classification = "O"
+			return classs
+	
+	def draw(self,surface):
+		pygame.draw.rect(surface, self.color, (self.x,self.y,self.width,self.height), 1)
+		if self.classification == "X":
+			pygame.draw.line(surface, (255,255,255), (self.x,self.y), (self.x+self.width, self.y+self.height))
+			pygame.draw.line(surface, (255,255,255), (self.x,self.y+self.height), (self.x+self.width,self.y))
+		elif self.classification == "O":
+			pygame.draw.circle(surface, (255,255,255), (int(self.x+(self.width/2)),int(self.y+(self.height/2))), int(self.height/2), 1)
+
 def checkDiag():
 	global gridCells
 	
@@ -293,100 +295,123 @@ def printWin(tttX):
 	time.sleep(2)
 	done=True
 
-pygame.display.init()
-
-winX = 800
-winY = 600
-
-screen = pygame.display.set_mode((winX, winY))
-
-gX = 0
-gY = 0
-gW = winX/3
-gH = winY/3
-for i in range(3):
-	for j in range(3):
-		sq = Square(gX, gY, gW, gH)
-		gridCells.append(sq)
-		gX += gW
+def main(nSeed):
+	global done
+	global winX
+	global winY
+	
 	gX = 0
-	gY += gH
+	gY = 0
+	gW = winX/3
+	gH = winY/3
+	for i in range(3):
+		for j in range(3):
+			sq = Square(gX, gY, gW, gH)
+			gridCells.append(sq)
+			gX += gW
+		gX = 0
+		gY += gH
 
-tttX = False
-nCaught = 0
-while not done:
-	mX = pygame.mouse.get_pos()[0]
-	mY = pygame.mouse.get_pos()[1]
-	
-	if tttX:
-		pygame.display.set_caption("X's Turn")
-	else:
-		pygame.display.set_caption("O's Turn")
-	
-	# Handle tie condition
-	if nCaught >= 9:
-		print('Tie Game')
-		time.sleep(2)
-		done = True
-	
-	events = pygame.event.get()
-	for e in events:
-		if e.type == pygame.QUIT:
+	tttX = nSeed
+	nCaught = 0
+	while not done:
+		mX = pygame.mouse.get_pos()[0]
+		mY = pygame.mouse.get_pos()[1]
+		
+		if tttX:
+			pygame.display.set_caption("X's Turn")
+		else:
+			pygame.display.set_caption("O's Turn")
+		
+		# Handle tie condition
+		if nCaught >= 9:
+			print('Tie Game')
+			pygame.display.set_caption("Tie Game")
+			time.sleep(2)
 			done = True
-		if e.type == pygame.KEYDOWN:
-			if e.key == pygame.K_ESCAPE:
+			return "Tie"
+		
+		events = pygame.event.get()
+		for e in events:
+			if e.type == pygame.QUIT:
 				done = True
-		if e.type == pygame.MOUSEBUTTONDOWN:
-			i=0
-			for grid in gridCells:
-				caught = grid.checkBounds(mX, mY)
-				if caught:
-					if tttX:
-						grid.setClassification("X")
-					else:
-						grid.setClassification("O")
-						
-					# check neighbors
-					cN = checkNeighbors(grid, i)
-					
-					# Handle win condition
-					if len(cN) > 0:
-						screen.fill((0,0,0))
-						grid.draw(screen)
-						for gg in cN:
-							gg.draw(screen)
-						pygame.display.flip()
-						
-						printWin(tttX)
-						break
-					else:
-						# Check the diagonal portion of the grid
-						cD = checkDiag()
+			if e.type == pygame.KEYDOWN:
+				if e.key == pygame.K_ESCAPE:
+					return ""
+			if e.type == pygame.MOUSEBUTTONDOWN:
+				i=0
+				for grid in gridCells:
+					caught = grid.checkBounds(mX, mY)
+					if caught:
+						if tttX:
+							grid.setClassification("X")
+						else:
+							grid.setClassification("O")
+							
+						# check neighbors
+						cN = checkNeighbors(grid, i)
 						
 						# Handle win condition
-						if len(cD) > 0:
+						if len(cN) > 0:
 							screen.fill((0,0,0))
 							grid.draw(screen)
-							for gg in cD:
+							for gg in cN:
 								gg.draw(screen)
 							pygame.display.flip()
 							
 							printWin(tttX)
-							break
-					
-					# toggle the player turn
-					if tttX:
-						tttX = False
-					else:
-						tttX = True
-					
-					nCaught += 1
-				i+=1
-	
-	screen.fill((0,0,0))
-	for grid in gridCells:
-		grid.draw(screen)
-	
-	pygame.display.flip()
+							if tttX:
+								return "X"
+							return "O"
+						else:
+							# Check the diagonal portion of the grid
+							cD = checkDiag()
+							
+							# Handle win condition
+							if len(cD) > 0:
+								screen.fill((0,0,0))
+								grid.draw(screen)
+								for gg in cD:
+									gg.draw(screen)
+								pygame.display.flip()
+								
+								printWin(tttX)
+								if tttX:
+									return "X"
+								return "O"
+						
+						# toggle the player turn
+						if tttX:
+							tttX = False
+						else:
+							tttX = True
+						
+						nCaught += 1
+					i+=1
 		
+		screen.fill((0,0,0))
+		for grid in gridCells:
+			grid.draw(screen)
+		
+		pygame.display.flip()
+
+pygame.display.init()
+
+screen = pygame.display.set_mode((winX, winY))
+
+starter = False
+while 1:
+	gridCells = []
+	done = False
+	
+	rtx = main(starter)
+	
+	if starter:
+		starter=False
+	else:
+		starter=True
+		
+	if rtx != "Tie":
+		break
+
 pygame.display.quit()
