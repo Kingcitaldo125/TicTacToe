@@ -184,15 +184,18 @@ int main(int argc, char** argv)
 	// Player 1 X
 	// Player 2 O
 
-	std::vector<std::vector<char>> x =
+	using vecchar = std::vector<char>;
+	using vecvecchar = std::vector<vecchar>;
+
+	vecvecchar x =
 	{
+	{'X','O','X'},
 	{'O','O','X'},
-	{'O','O','X'},
-	{'X','X','O'}
+	{'O','X','X'}
 	};
 
 	// Print result of game
-	cout << TicTacToe<std::vector<std::vector<char>>, std::vector<char>>(x) << endl;
+	cout << TicTacToe<vecvecchar, vecchar>(x) << endl;
 
 	return 0;
 }
