@@ -19,7 +19,7 @@ using TTT::WIN_COND;
 
 
 template <typename T, typename V>
-WIN_COND check_rows(const T& results)
+WIN_COND constexpr check_rows(const T& results)
 {
 	int O = 0;
 	int X = 0;
@@ -69,7 +69,7 @@ WIN_COND check_rows(const T& results)
 
 
 template <typename T, typename V>
-WIN_COND check_diagonals(const T& results)
+WIN_COND constexpr check_diagonals(const T& results)
 {
 	int i;
 	int X = 0;
@@ -94,7 +94,7 @@ WIN_COND check_diagonals(const T& results)
 
 
 template <typename T, typename V>
-inline WIN_COND evaluate(const T& results)
+inline constexpr WIN_COND evaluate(const T& results)
 {
 	WIN_COND x = check_rows<T, V>(results);
 	return x == WIN_COND::TIE ? check_diagonals<T, V>(results) : x;
@@ -102,7 +102,7 @@ inline WIN_COND evaluate(const T& results)
 
 
 template <typename T, typename V>
-std::string TicTacToe(const T& x)
+inline constexpr std::string TicTacToe(const T& x)
 {
 	auto res = evaluate<T,V>(x);
 	switch (res)
@@ -126,9 +126,9 @@ int main(int argc, char** argv)
 
 	std::vector<std::vector<char>> x =
 	{
-	{'X','X','O'},
+	{'X','O','O'},
 	{'O','O','X'},
-	{'X','X','X'}
+	{'X','O','X'}
 	};
 
 	// Print result of game
