@@ -4,14 +4,18 @@
 #include <vector>
 
 
+namespace TTT {
+	enum class WIN_COND
+	{
+		TIE = 0, O, X
+	};
+}
+
+
 using std::cout;
 using std::endl;
 
-
-static enum class WIN_COND
-{
-	TIE = 0, O, X
-};
+using TTT::WIN_COND;
 
 
 template <typename T, typename V>
@@ -98,7 +102,7 @@ inline WIN_COND evaluate(const T& results)
 
 
 template <typename T, typename V>
-std::string TTT(const T& x)
+std::string TicTacToe(const T& x)
 {
 	auto res = evaluate<T,V>(x);
 	switch (res)
@@ -126,9 +130,10 @@ int main(int argc, char** argv)
 	{'O','O','X'},
 	{'X','X','X'}
 	};
-  
-  // Print result of game
-	cout << TTT<std::vector<std::vector<char>>, std::vector<char>>(x) << endl;
-  
+
+	// Print result of game
+	cout << TicTacToe<std::vector<std::vector<char>>, std::vector<char>>(x) << endl;
+
 	return 0;
 }
+
