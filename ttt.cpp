@@ -68,7 +68,7 @@ WIN_COND constexpr check_rows(const T& results)
 }
 
 
-template <typename T, typename V>
+template <typename T>
 WIN_COND constexpr check_cols(const T& results)
 {
 	for (int i = 0; i < results.size(); ++i)
@@ -100,7 +100,7 @@ WIN_COND constexpr check_cols(const T& results)
 }
 
 
-template <typename T, typename V>
+template <typename T>
 WIN_COND constexpr check_diagonals(const T& results)
 {
 	int i,j;
@@ -148,10 +148,10 @@ template <typename T, typename V>
 inline constexpr WIN_COND evaluate(const T& results)
 {
 	WIN_COND x = check_rows<T, V>(results);
-	WIN_COND y = check_cols<T, V>(results);
+	WIN_COND y = check_cols<T>(results);
 
 	if (x == WIN_COND::TIE && y == WIN_COND::TIE)
-		return check_diagonals<T, V>(results);
+		return check_diagonals<T>(results);
 	else if(x == WIN_COND::TIE && y != WIN_COND::TIE)
 		return y;
 	else if(y == WIN_COND::TIE && x != WIN_COND::TIE)
