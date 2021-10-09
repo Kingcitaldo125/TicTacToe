@@ -145,7 +145,7 @@ WIN_COND constexpr check_diagonals(const T& results)
 
 
 template <typename T, typename V>
-inline constexpr WIN_COND evaluate(const T& results)
+constexpr WIN_COND evaluate(const T& results)
 {
 	WIN_COND x = check_rows<T, V>(results);
 	WIN_COND y = check_cols<T>(results);
@@ -162,7 +162,7 @@ inline constexpr WIN_COND evaluate(const T& results)
 
 
 template <typename T, typename V>
-inline constexpr std::string TicTacToe(const T& x)
+constexpr std::string TicTacToe(const T& x)
 {
 	auto res = evaluate<T,V>(x);
 	switch (res)
