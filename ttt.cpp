@@ -13,7 +13,6 @@ namespace TTT {
 
 
 using std::cout;
-using std::endl;
 
 using TTT::WIN_COND;
 
@@ -195,7 +194,7 @@ int main(int argc, char** argv)
 	};
 
 	// Print result of game
-	cout << TicTacToe<vecvecchar, vecchar>(x) << endl;
+	cout << TicTacToe<vecvecchar, vecchar>(x) << '\n';
 
 	return 0;
 }
